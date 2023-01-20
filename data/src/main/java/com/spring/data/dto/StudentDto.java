@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class StudentDto {
-
     private Long studentId;
     private String firstName;
     private String lastName;

@@ -1,5 +1,6 @@
 package com.spring.data.controller;
 
+import com.spring.data.dto.CourseDto;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.dto.StudentDto;
 import com.spring.data.service.StudentService;
@@ -41,6 +42,13 @@ public class StudentController
                              @RequestBody StudentDto studentDto) throws UserException
     {
         studentService.updateStudent(studentId, studentDto);
+    }
+
+    @PostMapping("/registerCourse/{studentId}")
+    public void registerCourse(@PathVariable("studentId") Long studentId,
+                               @RequestBody CourseDto courseDto) throws UserException
+    {
+        studentService.registerCourse(studentId, courseDto);
     }
 
     @GetMapping("/getAllStudents")

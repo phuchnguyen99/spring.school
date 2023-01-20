@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class Student extends User{
     @JoinTable(
             name = "student_course_map",
             joinColumns = @JoinColumn(
-                    name = "student_id",
+                    name = "id",
                     referencedColumnName = "id"
             ),
             inverseJoinColumns = @JoinColumn(
@@ -30,5 +31,13 @@ public class Student extends User{
                     referencedColumnName = "courseId"
             )
     )
-    List<Course> courseList;
+    List<Course> courseList = new ArrayList<>();
+
+    public void addCourse(final Course course)
+    {
+        if(!courseList.contains(course))
+        {
+            courseList.add(course);
+        }
+    }
 }

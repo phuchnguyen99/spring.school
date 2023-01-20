@@ -1,10 +1,13 @@
 package com.spring.data.service;
 
 import com.spring.data.converter.Converter;
+import com.spring.data.dto.CourseDto;
+import com.spring.data.entity.Course;
 import com.spring.data.entity.Student;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.excepttion.UserNotFoundException;
 import com.spring.data.dto.StudentDto;
+import com.spring.data.repository.CourseRepository;
 import com.spring.data.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,19 +24,22 @@ public class StudentServiceImpl implements StudentService{
     private StudentRepository studentRepository;
 
     @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
     private Converter converter;
 
     @Override
     @Transactional
     public StudentDto getStudent(Long studentId) throws UserNotFoundException {
         final Student student = retrieveStudent(studentId);
-        return converter.convertStudentToStudentDto(student);
+        return (StudentDto) converter.convertEntityDto(student, new StudentDto());
     }
 
     @Override
     @Transactional
     public void saveStudent(StudentDto studentDto) throws UserException {
-        final Student student = converter.convertStudentDtoToStudent(studentDto);
+        final Student student = (Student) converter.convertEntityDto(studentDto, new Student());
         final Optional<Student> studentOptional = studentRepository.findById(student.getId());
         if(studentOptional.isPresent())
         {
@@ -73,6 +79,16 @@ public class StudentServiceImpl implements StudentService{
        return studentRepository.findAll().stream()
                 .map(s -> converter.convertStudentToStudentDto(s)
                 ).collect(Collectors.toList());
+    }
+
+    @Override
+    public void registerCourse(Long studentId, CourseDto courseDto) throws UserException{
+        final Student student = retrieveStudent(studentId);
+        final Course registeredCourse = (Course) converter.convertEntityDto(courseDto, new Course());
+        student.addCourse(registeredCourse);
+        registeredCourse.addStudent(student);
+        courseRepository.save(registeredCourse);
+        studentRepository.save(student);
     }
 
     private Student retrieveStudent(final Long studentId) throws UserNotFoundException

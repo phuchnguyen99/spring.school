@@ -20,7 +20,7 @@ public class Teacher extends User
     @JoinTable(
             name = "teacher_course_map",
             joinColumns = @JoinColumn(
-                    name = "teacher_id",
+                    name = "id",
                     referencedColumnName = "id"
             ),
             inverseJoinColumns = @JoinColumn(

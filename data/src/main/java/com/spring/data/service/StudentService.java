@@ -1,5 +1,6 @@
 package com.spring.data.service;
 
+import com.spring.data.dto.CourseDto;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.dto.StudentDto;
 
@@ -16,4 +17,6 @@ public interface StudentService
     void updateStudent(Long studentId, StudentDto studentDto) throws UserException;
 
     List<StudentDto> getAllStudents();
+
+    void registerCourse(Long studentId, CourseDto courseDto) throws UserException;
 }

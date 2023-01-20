@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,11 +33,11 @@ public class Course
                     referencedColumnName = "courseId"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "student_id",
+                    name = "id",
                     referencedColumnName = "id"
             )
     )
-    List<Student> students;
+    List<Student> students = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
@@ -44,4 +45,12 @@ public class Course
             referencedColumnName = "id"
     )
     Teacher teacher;
+
+    public void addStudent(final Student student)
+    {
+        if(!students.contains(student))
+        {
+            students.add(student);
+        }
+    }
 }

@@ -1,20 +1,15 @@
 package com.spring.data.converter;
 
 import com.spring.data.dto.StudentDto;
+import com.spring.data.entity.Course;
 import com.spring.data.entity.Student;
 import com.spring.data.repository.StudentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Converter
+public class Converter<S, T>
 {
-    private final StudentRepository studentRepository;
-
-    public Converter(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
-
     public StudentDto convertStudentToStudentDto(final Student student)
     {
         final StudentDto studentDto = new StudentDto();
@@ -27,5 +22,11 @@ public class Converter
         final Student student = new Student();
         BeanUtils.copyProperties(studentDto, student);
         return student;
+    }
+
+    public T convertEntityDto(S source, T target)
+    {
+        BeanUtils.copyProperties(source, target);
+        return target;
     }
 }
