@@ -1,13 +1,14 @@
 package com.spring.data.service;
 
-import com.spring.data.converter.StudentToStudentModel;
+import com.spring.data.converter.Converter;
 import com.spring.data.entity.Student;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.excepttion.UserNotFoundException;
-import com.spring.data.model.StudentModel;
+import com.spring.data.dto.StudentDto;
 import com.spring.data.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,19 +20,20 @@ public class StudentServiceImpl implements StudentService{
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private Converter converter;
+
     @Override
-    public StudentModel getStudent(Long studentId) throws UserNotFoundException {
+    @Transactional
+    public StudentDto getStudent(Long studentId) throws UserNotFoundException {
         final Student student = retrieveStudent(studentId);
-        return StudentModel.builder()
-                .studentId(student.getId())
-                .firstName(student.getFirstName())
-                .lastName(student.getLastName())
-                .build();
+        return converter.convertStudentToStudentDto(student);
     }
 
     @Override
-    public void saveStudent(StudentModel studentModel) throws UserException {
-        final Student student = StudentToStudentModel.convertStudentToStudentModel(studentModel);
+    @Transactional
+    public void saveStudent(StudentDto studentDto) throws UserException {
+        final Student student = converter.convertStudentDtoToStudent(studentDto);
         final Optional<Student> studentOptional = studentRepository.findById(student.getId());
         if(studentOptional.isPresent())
         {
@@ -41,36 +43,35 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
+    @Transactional
     public void deleteStudent(Long studentId) throws UserException {
         final Student student = retrieveStudent(studentId);
         studentRepository.delete(student);
     }
 
     @Override
-    public void updateStudent(Long studentId, StudentModel studentModel) throws UserException {
+    @Transactional
+    public void updateStudent(Long studentId, StudentDto studentDto) throws UserException {
         final Student student = retrieveStudent(studentId);
-        if(studentModel.getFirstName() != null && !student.getFirstName().equalsIgnoreCase(studentModel.getFirstName()))
+        if(studentDto.getFirstName() != null && !student.getFirstName().equalsIgnoreCase(studentDto.getFirstName()))
         {
-            student.setFirstName(studentModel.getFirstName());
+            student.setFirstName(studentDto.getFirstName());
         }
-        if(studentModel.getLastName() != null && !student.getLastName().equalsIgnoreCase(studentModel.getLastName()))
+        if(studentDto.getLastName() != null && !student.getLastName().equalsIgnoreCase(studentDto.getLastName()))
         {
-            student.setLastName(studentModel.getLastName());
+            student.setLastName(studentDto.getLastName());
         }
-        if(studentModel.getEmail() != null && !student.getLastName().equalsIgnoreCase(studentModel.getLastName()))
+        if(studentDto.getEmail() != null && !student.getLastName().equalsIgnoreCase(studentDto.getLastName()))
         {
-            student.setEmail(studentModel.getEmail());
+            student.setEmail(studentDto.getEmail());
         }
         studentRepository.save(student);
     }
 
     @Override
-    public List<StudentModel> getAllStudents() {
+    public List<StudentDto> getAllStudents() {
        return studentRepository.findAll().stream()
-                .map(student -> new StudentModel().builder()
-                        .firstName(student.getFirstName())
-                        .lastName(student.getLastName())
-                        .email(student.getEmail()).build()
+                .map(s -> converter.convertStudentToStudentDto(s)
                 ).collect(Collectors.toList());
     }
 
@@ -81,5 +82,4 @@ public class StudentServiceImpl implements StudentService{
                     return new UserNotFoundException("Student does not exist.");
                 });
     }
-
 }

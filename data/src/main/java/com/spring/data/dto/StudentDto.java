@@ -1,4 +1,4 @@
-package com.spring.data.model;
+package com.spring.data.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -12,10 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentModel {
+public class StudentDto {
 
     private Long studentId;
     private String firstName;
     private String lastName;
     private String email;
+    List<CourseDto> courseDtolist;
 }

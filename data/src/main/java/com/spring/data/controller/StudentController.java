@@ -1,7 +1,7 @@
 package com.spring.data.controller;
 
 import com.spring.data.excepttion.UserException;
-import com.spring.data.model.StudentModel;
+import com.spring.data.dto.StudentDto;
 import com.spring.data.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +16,17 @@ public class StudentController
     private StudentService studentService;
 
     @GetMapping("/{studentId}")
-    public StudentModel getStudent(@PathVariable("studentId") Long studentId)
+    public StudentDto getStudent(@PathVariable("studentId") Long studentId)
             throws UserException
     {
         return studentService.getStudent(studentId);
     }
 
     @PostMapping("/addStudent")
-    public void addStudent(@RequestBody StudentModel studentModel)
+    public void addStudent(@RequestBody StudentDto studentDto)
             throws UserException
     {
-        studentService.saveStudent(studentModel);
+        studentService.saveStudent(studentDto);
     }
 
     @DeleteMapping("/deleteStudent/{studentId}")
@@ -38,13 +38,13 @@ public class StudentController
 
     @PutMapping("/updateStudent/{studentId}")
     public void updateStudent(@PathVariable("studentId") Long studentId,
-                             @RequestBody StudentModel studentModel) throws UserException
+                             @RequestBody StudentDto studentDto) throws UserException
     {
-        studentService.updateStudent(studentId, studentModel);
+        studentService.updateStudent(studentId, studentDto);
     }
 
     @GetMapping("/getAllStudents")
-    public List<StudentModel> getAllStudents()
+    public List<StudentDto> getAllStudents()
     {
         return studentService.getAllStudents();
     }
