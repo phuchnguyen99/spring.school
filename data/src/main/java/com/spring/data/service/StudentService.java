@@ -19,4 +19,6 @@ public interface StudentService
     List<StudentDto> getAllStudents();
 
     void registerCourse(Long studentId, CourseDto courseDto) throws UserException;
+
+    void removeCourse(Long studentId, Long courseId) throws UserException;
 }

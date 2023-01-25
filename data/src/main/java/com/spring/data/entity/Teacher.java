@@ -14,6 +14,10 @@ import java.util.List;
 @Table(name = "teacher")
 public class Teacher extends User
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
     String department;
 
     @OneToMany(cascade = CascadeType.ALL)

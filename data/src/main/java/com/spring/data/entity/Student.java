@@ -1,10 +1,7 @@
 package com.spring.data.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = "courseList")
 @Table(name = "student")
 public class Student extends User{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long studentId;
     private String firstName;
     private String lastName;
 
@@ -23,8 +25,8 @@ public class Student extends User{
     @JoinTable(
             name = "student_course_map",
             joinColumns = @JoinColumn(
-                    name = "id",
-                    referencedColumnName = "id"
+                    name = "student_id",
+                    referencedColumnName = "studentId"
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "course_id",

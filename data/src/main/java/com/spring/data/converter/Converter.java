@@ -13,7 +13,11 @@ public class Converter<S, T>
     public StudentDto convertStudentToStudentDto(final Student student)
     {
         final StudentDto studentDto = new StudentDto();
-        BeanUtils.copyProperties(student, studentDto);
+        studentDto.setStudentId(student.getStudentId());
+        studentDto.setFirstName(student.getFirstName());
+        studentDto.setLastName(student.getLastName());
+        studentDto.setEmail(student.getEmail());
+        studentDto.addCourseToCourseList(student.getCourseList());
         return studentDto;
     }
 

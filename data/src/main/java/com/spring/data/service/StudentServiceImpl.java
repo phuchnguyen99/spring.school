@@ -33,14 +33,14 @@ public class StudentServiceImpl implements StudentService{
     @Transactional
     public StudentDto getStudent(Long studentId) throws UserNotFoundException {
         final Student student = retrieveStudent(studentId);
-        return (StudentDto) converter.convertEntityDto(student, new StudentDto());
+        return converter.convertStudentToStudentDto(student);
     }
 
     @Override
     @Transactional
     public void saveStudent(StudentDto studentDto) throws UserException {
         final Student student = (Student) converter.convertEntityDto(studentDto, new Student());
-        final Optional<Student> studentOptional = studentRepository.findById(student.getId());
+        final Optional<Student> studentOptional = studentRepository.findById(student.getStudentId());
         if(studentOptional.isPresent())
         {
             throw new UserException("Student already exists.");
@@ -86,9 +86,20 @@ public class StudentServiceImpl implements StudentService{
         final Student student = retrieveStudent(studentId);
         final Course registeredCourse = (Course) converter.convertEntityDto(courseDto, new Course());
         student.addCourse(registeredCourse);
-        registeredCourse.addStudent(student);
-        courseRepository.save(registeredCourse);
+        Student savedStudent = studentRepository.save(student);
+        System.out.println(savedStudent.getCourseList().size());
+    }
+
+    @Override
+    public void removeCourse(Long studentId, Long courseId) throws UserException {
+        final Student student = retrieveStudent(studentId);
+        final Course course = student.getCourseList().stream()
+                .filter(c -> c.getCourseId().equals(courseId))
+                .findAny().orElseThrow( () -> new UserException("Course is not existed"));
+        student.getCourseList().remove(course);
         studentRepository.save(student);
+        courseRepository.save(course);
+
     }
 
     private Student retrieveStudent(final Long studentId) throws UserNotFoundException

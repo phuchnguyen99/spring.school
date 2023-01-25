@@ -11,9 +11,6 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 public class User
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
     private String username;
 
     @Column(length = 60)

@@ -51,6 +51,13 @@ public class StudentController
         studentService.registerCourse(studentId, courseDto);
     }
 
+    @DeleteMapping("{studentId}/removeCourse/{courseId}")
+    public void removeCourse(@PathVariable("studentId") Long studentId,
+                             @PathVariable("courseId") Long courseId) throws UserException
+    {
+        studentService.removeCourse(studentId, courseId);
+    }
+
     @GetMapping("/getAllStudents")
     public List<StudentDto> getAllStudents()
     {

@@ -33,8 +33,8 @@ public class Course
                     referencedColumnName = "courseId"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "id",
-                    referencedColumnName = "id"
+                    name = "student_id",
+                    referencedColumnName = "studentId"
             )
     )
     List<Student> students = new ArrayList<>();
