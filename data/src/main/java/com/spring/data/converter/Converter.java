@@ -1,5 +1,6 @@
 package com.spring.data.converter;
 
+import com.spring.data.dto.CourseDto;
 import com.spring.data.dto.StudentDto;
 import com.spring.data.entity.Course;
 import com.spring.data.entity.Student;
@@ -26,6 +27,26 @@ public class Converter<S, T>
         final Student student = new Student();
         BeanUtils.copyProperties(studentDto, student);
         return student;
+    }
+
+    public Course convertCourseDtoToCourse(final CourseDto courseDto)
+    {
+        return Course.builder()
+                .courseId(courseDto.getCourseId())
+                .courseCode(courseDto.getCourseCode())
+                .courseName(courseDto.getCourseName())
+                .credit(courseDto.getCredit())
+                .build();
+    }
+
+    public CourseDto convertCourseToCourseDto(final Course course)
+    {
+        return CourseDto.builder()
+                .courseId(course.getCourseId())
+                .courseCode(course.getCourseCode())
+                .courseName(course.getCourseName())
+                .credit(course.getCredit())
+                .build();
     }
 
     public T convertEntityDto(S source, T target)

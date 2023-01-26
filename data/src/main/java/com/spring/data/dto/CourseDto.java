@@ -17,5 +17,6 @@ public class CourseDto {
     private String courseCode;
     private int credit;
     List<StudentDto> studentList;
+    private TeacherDto teacherDto;
 
 }

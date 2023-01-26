@@ -21,4 +21,15 @@ public class RestResponseEntityHandler extends ResponseEntityExceptionHandler {
                 : new ErrorMessage(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
         return ResponseEntity.status(message.getHttpStatus()).body(message);
     }
+
+    @ExceptionHandler(CourseException.class)
+    public ResponseEntity<ErrorMessage> courseException(CourseException exception,
+                                                        WebRequest request)
+    {
+        final ErrorMessage message = exception instanceof CourseNotFoundException ?
+                 new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage())
+                : new ErrorMessage(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
+        return ResponseEntity.status(message.getHttpStatus()).body(message);
+
+    }
 }
