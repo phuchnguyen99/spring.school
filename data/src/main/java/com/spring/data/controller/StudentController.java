@@ -1,6 +1,7 @@
 package com.spring.data.controller;
 
-import com.spring.data.dto.CourseDto;
+import com.spring.data.converter.Converter;
+import com.spring.data.entity.Student;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.dto.StudentDto;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/student")
@@ -17,18 +19,23 @@ public class StudentController
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private Converter converter;
+
     @GetMapping("/{studentId}")
     public StudentDto getStudent(@PathVariable("studentId") Long studentId)
             throws UserException
     {
-        return studentService.getStudent(studentId);
+        final Student student = studentService.getStudent(studentId);
+        return converter.convertStudentToStudentDto(student);
     }
 
     @PostMapping("/addStudent")
     public void addStudent(@RequestBody StudentDto studentDto)
             throws UserException
     {
-        studentService.saveStudent(studentDto);
+        final Student student = converter.convertStudentDtoToStudent(studentDto);
+        studentService.saveStudent(student);
     }
 
     @DeleteMapping("/deleteStudent/{studentId}")
@@ -42,7 +49,8 @@ public class StudentController
     public void updateStudent(@PathVariable("studentId") Long studentId,
                              @RequestBody StudentDto studentDto) throws UserException
     {
-        studentService.updateStudent(studentId, studentDto);
+        final Student student = converter.convertStudentDtoToStudent(studentDto);
+        studentService.updateStudent(studentId, student);
     }
 
     @PostMapping("{studentId}/registerCourse/{courseId}")
@@ -63,6 +71,7 @@ public class StudentController
     @GetMapping("/getAllStudents")
     public List<StudentDto> getAllStudents()
     {
-        return studentService.getAllStudents();
+        final List<Student> students = studentService.getAllStudents();
+        return students.stream().map(s -> converter.convertStudentToStudentDto(s)).collect(Collectors.toList());
     }
 }

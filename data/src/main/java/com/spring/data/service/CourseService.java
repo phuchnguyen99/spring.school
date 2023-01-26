@@ -1,6 +1,5 @@
 package com.spring.data.service;
 
-import com.spring.data.dto.CourseDto;
 import com.spring.data.entity.Course;
 import com.spring.data.excepttion.CourseException;
 

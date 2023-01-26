@@ -1,23 +1,22 @@
 package com.spring.data.service;
 
-import com.spring.data.dto.CourseDto;
+import com.spring.data.entity.Student;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.excepttion.UserException;
-import com.spring.data.dto.StudentDto;
 
 import java.util.List;
 
 public interface StudentService
 {
-    StudentDto getStudent(Long studentId) throws UserException ;
+    Student getStudent(Long studentId) throws UserException ;
 
-    void saveStudent(StudentDto studentDto) throws UserException;
+    void saveStudent(Student student) throws UserException;
 
     void deleteStudent(Long studentId) throws UserException;
 
-    void updateStudent(Long studentId, StudentDto studentDto) throws UserException;
+    void updateStudent(Long studentId, Student student) throws UserException;
 
-    List<StudentDto> getAllStudents();
+    List<Student> getAllStudents();
 
     void registerCourse(Long studentId, Long courseDto) throws UserException, CourseException;
 

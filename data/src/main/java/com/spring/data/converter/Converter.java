@@ -6,12 +6,12 @@ import com.spring.data.dto.TeacherDto;
 import com.spring.data.entity.Course;
 import com.spring.data.entity.Student;
 import com.spring.data.entity.Teacher;
-import com.spring.data.repository.StudentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class Converter<S, T>
@@ -59,12 +59,8 @@ public class Converter<S, T>
                     .department(teacher.getDepartment())
                     .build();
         }
-        final List<StudentDto> studentDtos = new ArrayList<>();
-       // course.getStudents().stream().map(s -> studentDtos.add(convertStudentToStudentDto(s)));
-        for(Student s : course.getStudents())
-        {
-            studentDtos.add(convertStudentToStudentDto(s));
-        }
+        final List<StudentDto> studentDtos = course.getStudents()
+                .stream().map(this::convertStudentToStudentDto).collect(Collectors.toList());
         return CourseDto.builder()
                 .courseId(course.getCourseId())
                 .courseCode(course.getCourseCode())
@@ -73,11 +69,5 @@ public class Converter<S, T>
                 .teacherDto(teacherDto)
                 .studentList(studentDtos)
                 .build();
-    }
-
-    public T convertEntityDto(S source, T target)
-    {
-        BeanUtils.copyProperties(source, target);
-        return target;
     }
 }

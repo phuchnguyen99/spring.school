@@ -1,14 +1,12 @@
 package com.spring.data.service;
 
 import com.spring.data.converter.Converter;
-import com.spring.data.dto.CourseDto;
 import com.spring.data.entity.Course;
 import com.spring.data.entity.Student;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.excepttion.CourseNotFoundException;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.excepttion.UserNotFoundException;
-import com.spring.data.dto.StudentDto;
 import com.spring.data.repository.CourseRepository;
 import com.spring.data.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -33,15 +30,13 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public StudentDto getStudent(Long studentId) throws UserNotFoundException {
-        final Student student = retrieveStudent(studentId);
-        return converter.convertStudentToStudentDto(student);
+    public Student getStudent(Long studentId) throws UserNotFoundException {
+       return retrieveStudent(studentId);
     }
 
     @Override
     @Transactional
-    public void saveStudent(StudentDto studentDto) throws UserException {
-        final Student student = (Student) converter.convertEntityDto(studentDto, new Student());
+    public void saveStudent(Student student) throws UserException {
         final Optional<Student> studentOptional = studentRepository.findById(student.getStudentId());
         if(studentOptional.isPresent())
         {
@@ -59,28 +54,26 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public void updateStudent(Long studentId, StudentDto studentDto) throws UserException {
-        final Student student = retrieveStudent(studentId);
-        if(studentDto.getFirstName() != null && !student.getFirstName().equalsIgnoreCase(studentDto.getFirstName()))
+    public void updateStudent(Long studentId, Student student) throws UserException {
+        final Student foundStudent = retrieveStudent(studentId);
+        if(student.getFirstName() != null && !student.getFirstName().equalsIgnoreCase(foundStudent.getFirstName()))
         {
-            student.setFirstName(studentDto.getFirstName());
+            foundStudent.setFirstName(student.getFirstName());
         }
-        if(studentDto.getLastName() != null && !student.getLastName().equalsIgnoreCase(studentDto.getLastName()))
+        if(student.getLastName() != null && !student.getLastName().equalsIgnoreCase(foundStudent.getLastName()))
         {
-            student.setLastName(studentDto.getLastName());
+            foundStudent.setLastName(student.getLastName());
         }
-        if(studentDto.getEmail() != null && !student.getLastName().equalsIgnoreCase(studentDto.getLastName()))
+        if(student.getEmail() != null && !student.getLastName().equalsIgnoreCase(foundStudent.getLastName()))
         {
-            student.setEmail(studentDto.getEmail());
+            foundStudent.setEmail(student.getEmail());
         }
-        studentRepository.save(student);
+        studentRepository.save(foundStudent);
     }
 
     @Override
-    public List<StudentDto> getAllStudents() {
-       return studentRepository.findAll().stream()
-                .map(s -> converter.convertStudentToStudentDto(s)
-                ).collect(Collectors.toList());
+    public List<Student> getAllStudents() {
+       return studentRepository.findAll();
     }
 
     @Override
