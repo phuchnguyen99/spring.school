@@ -4,6 +4,8 @@ import com.spring.data.converter.Converter;
 import com.spring.data.dto.CourseDto;
 import com.spring.data.entity.Course;
 import com.spring.data.entity.Student;
+import com.spring.data.excepttion.CourseException;
+import com.spring.data.excepttion.CourseNotFoundException;
 import com.spring.data.excepttion.UserException;
 import com.spring.data.excepttion.UserNotFoundException;
 import com.spring.data.dto.StudentDto;
@@ -82,12 +84,17 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public void registerCourse(Long studentId, CourseDto courseDto) throws UserException{
+    public void registerCourse(Long studentId, Long courseId) throws UserException, CourseException{
         final Student student = retrieveStudent(studentId);
-        final Course registeredCourse = (Course) converter.convertEntityDto(courseDto, new Course());
-        student.addCourse(registeredCourse);
-        Student savedStudent = studentRepository.save(student);
-        System.out.println(savedStudent.getCourseList().size());
+        final Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("Course does not exists"));
+        if(!student.getCourseList().contains(course)) {
+            student.addCourse(course);
+            studentRepository.save(student);
+        }
+        else {
+            throw new UserException("Student already registered the course");
+        }
     }
 
     @Override

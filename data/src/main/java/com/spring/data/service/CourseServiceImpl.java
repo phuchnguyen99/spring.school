@@ -1,6 +1,5 @@
 package com.spring.data.service;
 
-import com.spring.data.dto.CourseDto;
 import com.spring.data.entity.Course;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.excepttion.CourseNotFoundException;
@@ -59,6 +58,10 @@ public class CourseServiceImpl implements CourseService{
         if(foundCourse.getTeacher() == null || !course.getTeacher().equals(foundCourse.getTeacher()))
         {
             foundCourse.setTeacher(course.getTeacher());
+        }
+        if(foundCourse.getCredit() != course.getCredit())
+        {
+            foundCourse.setCourseId(course.getCourseId());
         }
         courseRepository.save(foundCourse);
     }
