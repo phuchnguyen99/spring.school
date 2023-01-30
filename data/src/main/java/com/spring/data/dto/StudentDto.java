@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentDto {
+public class StudentDto extends UserDto{
     private Long studentId;
     private String firstName;
     private String lastName;

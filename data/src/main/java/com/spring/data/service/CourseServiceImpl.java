@@ -45,12 +45,12 @@ public class CourseServiceImpl implements CourseService{
     public void modifyCourse(Long courseId, Course course) throws CourseException {
         final Course foundCourse = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException("Course does not exist"));
-        if(course.getCourseName() != null && !course.getCourseName().isBlank()
+        if(course.getCourseName() != null && !course.getCourseName().isEmpty()
                 && !foundCourse.getCourseName().equalsIgnoreCase(course.getCourseName()))
         {
             foundCourse.setCourseName(course.getCourseName());
         }
-        if(course.getCourseCode() != null && !course.getCourseCode().isBlank()
+        if(course.getCourseCode() != null && !course.getCourseCode().isEmpty()
                 && !foundCourse.getCourseCode().equalsIgnoreCase(course.getCourseCode()))
         {
             foundCourse.setCourseId(course.getCourseId());

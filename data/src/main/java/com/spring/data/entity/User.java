@@ -18,4 +18,5 @@ public class User
     private String role;
     @Email
     private String email;
+    private boolean enabled;
 }
