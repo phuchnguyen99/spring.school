@@ -6,6 +6,9 @@ import com.spring.data.entity.Course;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +30,10 @@ public class CourseController {
     @GetMapping("/{courseId}")
     public CourseDto getCourse(@PathVariable("courseId") Long courseId) throws CourseException
     {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        for(GrantedAuthority au : authentication.getAuthorities()) {
+            System.out.println("PHUC " + au);
+        }
        final Course course = courseService.getCourse(courseId);
        return converter.convertCourseToCourseDto(course);
     }

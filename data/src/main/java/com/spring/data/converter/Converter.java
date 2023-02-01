@@ -22,7 +22,7 @@ public class Converter<S, T>
         studentDto.setStudentId(student.getStudentId());
         studentDto.setFirstName(student.getFirstName());
         studentDto.setLastName(student.getLastName());
-        studentDto.setEmail(student.getEmail());
+    //    studentDto.setEmail(student.getEmail());
         studentDto.addCourseToCourseList(student.getCourseList());
         return studentDto;
     }

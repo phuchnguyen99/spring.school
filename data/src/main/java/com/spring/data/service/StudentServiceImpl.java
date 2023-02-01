@@ -36,13 +36,13 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public void saveStudent(Student student) throws UserException {
+    public Student saveStudent(Student student) throws UserException {
         final Optional<Student> studentOptional = studentRepository.findById(student.getStudentId());
         if(studentOptional.isPresent())
         {
             throw new UserException("Student already exists.");
         }
-        studentRepository.save(student);
+        return studentRepository.save(student);
     }
 
     @Override
@@ -64,10 +64,10 @@ public class StudentServiceImpl implements StudentService{
         {
             foundStudent.setLastName(student.getLastName());
         }
-        if(student.getEmail() != null && !student.getLastName().equalsIgnoreCase(foundStudent.getLastName()))
-        {
-            foundStudent.setEmail(student.getEmail());
-        }
+//        if(student.getEmail() != null && !student.getLastName().equalsIgnoreCase(foundStudent.getLastName()))
+//        {
+//            foundStudent.setEmail(student.getEmail());
+//        }
         studentRepository.save(foundStudent);
     }
 

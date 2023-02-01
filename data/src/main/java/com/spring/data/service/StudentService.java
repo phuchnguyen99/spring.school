@@ -3,14 +3,16 @@ package com.spring.data.service;
 import com.spring.data.entity.Student;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.excepttion.UserException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface StudentService
 {
     Student getStudent(Long studentId) throws UserException ;
 
-    void saveStudent(Student student) throws UserException;
+    Student saveStudent(Student student) throws UserException;
 
     void deleteStudent(Long studentId) throws UserException;
 

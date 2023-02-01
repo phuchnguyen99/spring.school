@@ -2,7 +2,9 @@ package com.spring.data.service;
 
 import com.spring.data.entity.Course;
 import com.spring.data.excepttion.CourseException;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface CourseService {
     void addCourse(Course course) throws CourseException;
 
