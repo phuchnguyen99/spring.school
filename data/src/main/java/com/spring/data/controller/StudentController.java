@@ -7,6 +7,7 @@ import com.spring.data.excepttion.UserException;
 import com.spring.data.dto.StudentDto;
 import com.spring.data.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class StudentController
     }
 
     @PostMapping("/addStudent")
+    @PreAuthorize("hasRole('ADMIN')")
     public void addStudent(@RequestBody StudentDto studentDto)
             throws UserException
     {
@@ -39,6 +41,7 @@ public class StudentController
     }
 
     @DeleteMapping("/deleteStudent/{studentId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteStudent(@PathVariable("studentId") Long studentId)
             throws UserException
     {
@@ -46,6 +49,7 @@ public class StudentController
     }
 
     @PutMapping("/updateStudent/{studentId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void updateStudent(@PathVariable("studentId") Long studentId,
                              @RequestBody StudentDto studentDto) throws UserException
     {
@@ -54,6 +58,7 @@ public class StudentController
     }
 
     @PostMapping("{studentId}/registerCourse/{courseId}")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public void registerCourse(@PathVariable("studentId") Long studentId,
                                @PathVariable("courseId") Long courseId)
             throws UserException, CourseException
@@ -62,6 +67,7 @@ public class StudentController
     }
 
     @DeleteMapping("{studentId}/removeCourse/{courseId}")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public void removeCourse(@PathVariable("studentId") Long studentId,
                              @PathVariable("courseId") Long courseId) throws UserException
     {
@@ -69,6 +75,7 @@ public class StudentController
     }
 
     @GetMapping("/getAllStudents")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public List<StudentDto> getAllStudents()
     {
         final List<Student> students = studentService.getAllStudents();

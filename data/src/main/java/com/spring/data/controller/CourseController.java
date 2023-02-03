@@ -6,6 +6,7 @@ import com.spring.data.entity.Course;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ public class CourseController {
     private Converter converter;
 
     @PostMapping("/addCourse")
+    @PreAuthorize("hasAnyAuthority('course:write')")
     public void addCourse(@RequestBody CourseDto courseDto) throws CourseException
     {
         final Course course = converter.convertCourseDtoToCourse(courseDto);
@@ -28,23 +30,22 @@ public class CourseController {
     }
 
     @GetMapping("/{courseId}")
+    @PreAuthorize("hasAnyAuthority('course:write', 'course:read')")
     public CourseDto getCourse(@PathVariable("courseId") Long courseId) throws CourseException
     {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        for(GrantedAuthority au : authentication.getAuthorities()) {
-            System.out.println("PHUC " + au);
-        }
        final Course course = courseService.getCourse(courseId);
        return converter.convertCourseToCourseDto(course);
     }
 
     @DeleteMapping("/deleteCourse/{courseId}")
+    @PreAuthorize("hasAnyAuthority('course:write')")
     public void deleteCourse(@PathVariable("courseId") Long courseId) throws CourseException
     {
         courseService.deleteCourse(courseId);
     }
 
     @PutMapping("/modifyCourse/{courseId}")
+    @PreAuthorize("hasAnyAuthority('course:write')")
     public void modifyCourse(@PathVariable("courseId") Long courseId,
                              @RequestBody CourseDto courseDto) throws CourseException
     {
