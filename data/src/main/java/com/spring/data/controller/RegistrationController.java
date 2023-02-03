@@ -6,19 +6,24 @@ import com.spring.data.event.RegistrationCompleteEvent;
 import com.spring.data.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestController
+@Controller
 public class RegistrationController {
     @Autowired
     private RegistrationService registrationService;
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @GetMapping("/login")
+    public String getLogin()
+    {
+        return "login";
+    }
 
     @PostMapping("/register")
     public void registerUser(@RequestBody UserDto userDto,
