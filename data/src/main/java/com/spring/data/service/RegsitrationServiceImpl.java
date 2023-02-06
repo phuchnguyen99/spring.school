@@ -1,5 +1,6 @@
 package com.spring.data.service;
 
+import com.spring.data.config.UserRole;
 import com.spring.data.dto.UserDto;
 import com.spring.data.entity.Student;
 import com.spring.data.entity.User;
@@ -23,8 +24,8 @@ public class RegsitrationServiceImpl implements RegistrationService{
             student.setLastName(userDto.getLastName());
             student.setEmail(userDto.getEmail());
             student.setPassword(userDto.getPassword());
-            student.setRole("ROLE");
-            return studentRepository.save(student);
+            student.setRole(UserRole.STUDENT);
+             studentRepository.save(student);
         }
         return null;
     }

@@ -1,24 +1,20 @@
 package com.spring.data.config;
 
-import com.spring.data.entity.Course;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
-
-import static com.spring.data.config.UserRole.*;
 
 @Configuration
 @EnableWebSecurity
@@ -26,10 +22,14 @@ import static com.spring.data.config.UserRole.*;
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
     private PasswordEncoder passwordEncoder;
 
+    private final UserDetailsService applicationUserService;
+
     @Autowired
-    public ApplicationSecurityConfig(final PasswordEncoder passwordEncoder)
+    public ApplicationSecurityConfig(final PasswordEncoder passwordEncoder,
+                                     @Qualifier("userDetailsServiceImpl") final UserDetailsService applicationUserService)
     {
         this.passwordEncoder = passwordEncoder;
+        this.applicationUserService = applicationUserService;
     }
 
 
@@ -39,13 +39,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*")
+                .antMatchers("/", "index", "/css/*", "/js/*", "/templates")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .formLogin()
                         .loginPage("/login").permitAll()
+                        .failureUrl("/error")
+                       // .defaultSuccessUrl("/courses", true)
+                .failureUrl("/error")
                         .passwordParameter("password")
                         .usernameParameter("username")
                 .and()
@@ -61,31 +64,50 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
                         .logoutSuccessUrl("/login");
     }
 
-    @Override
-    @Bean
-    protected UserDetailsService userDetailsService()
-    {
-        final UserDetails phucUser = User.builder()
-                .username("phuc")
-                .password(passwordEncoder.encode("phuc1"))
-                .roles(STUDENT.name())
-                .authorities(STUDENT.getGrantedAuthorities())
-                .build();
+ //   @Override
+//    @Bean
+//    protected UserDetailsService userDetailsService()
+//    {
+//        return new UserDetailsServiceImpl(userRepository);
+//        final UserDetails phucUser = User.builder()
+//                .username("phuc")
+//                .password(passwordEncoder.encode("phuc1"))
+//                .roles(STUDENT.name())
+//                .authorities(STUDENT.getGrantedAuthorities())
+//                .build();
+//
+//        final UserDetails benUser = User.builder()
+//                .username("ben")
+//                .password(passwordEncoder.encode("ben1"))
+//                .roles(TEACHER.name())
+//                .authorities(TEACHER.getGrantedAuthorities())
+//                .build();
+//        final UserDetails ngocUser = User.builder()
+//                .username("ngoc")
+//                .password(passwordEncoder.encode("ngoc1"))
+//                .roles(ADMIN.name())
+//                .authorities(ADMIN.getGrantedAuthorities())
+//                .build();
+//        return new InMemoryUserDetailsManager(phucUser, benUser, ngocUser);
+//    }
 
-        final UserDetails benUser = User.builder()
-                .username("ben")
-                .password(passwordEncoder.encode("ben1"))
-                .roles(TEACHER.name())
-                .authorities(TEACHER.getGrantedAuthorities())
-                .build();
-        final UserDetails ngocUser = User.builder()
-                .username("ngoc")
-                .password(passwordEncoder.encode("ngoc1"))
-                .roles(ADMIN.name())
-                .authorities(ADMIN.getGrantedAuthorities())
-                .build();
-        return new InMemoryUserDetailsManager(phucUser, benUser, ngocUser);
+    @Bean
+    public UserDetailsService userDetailsService()
+    {
+        return applicationUserService;
     }
 
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider()
+    {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        daoAuthenticationProvider.setUserDetailsService(applicationUserService);
+        return daoAuthenticationProvider;
+    }
 
+    @Override
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder){
+        authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
+    }
 }

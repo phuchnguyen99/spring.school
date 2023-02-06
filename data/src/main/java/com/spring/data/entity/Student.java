@@ -8,12 +8,12 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @ToString(exclude = "courseList")
 @Table(name = "student")
-public class Student extends User{
+public class Student extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -34,6 +34,7 @@ public class Student extends User{
             )
     )
     List<Course> courseList = new ArrayList<>();
+
 
     public void addCourse(final Course course)
     {
