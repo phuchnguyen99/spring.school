@@ -64,10 +64,10 @@ public class StudentServiceImpl implements StudentService{
         {
             foundStudent.setLastName(student.getLastName());
         }
-//        if(student.getEmail() != null && !student.getLastName().equalsIgnoreCase(foundStudent.getLastName()))
-//        {
-//            foundStudent.setEmail(student.getEmail());
-//        }
+        if(student.getEmail() != null && !student.getLastName().equalsIgnoreCase(foundStudent.getLastName()))
+        {
+            foundStudent.setEmail(student.getEmail());
+        }
         studentRepository.save(foundStudent);
     }
 

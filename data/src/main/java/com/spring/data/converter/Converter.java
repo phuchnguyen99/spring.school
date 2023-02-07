@@ -9,7 +9,6 @@ import com.spring.data.entity.Teacher;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ public class Converter<S, T>
         studentDto.setStudentId(student.getStudentId());
         studentDto.setFirstName(student.getFirstName());
         studentDto.setLastName(student.getLastName());
-    //    studentDto.setEmail(student.getEmail());
+        studentDto.setEmail(student.getEmail());
         studentDto.addCourseToCourseList(student.getCourseList());
         return studentDto;
     }

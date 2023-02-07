@@ -1,6 +1,5 @@
 package com.spring.data.dto;
 
-
 import com.spring.data.entity.Course;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

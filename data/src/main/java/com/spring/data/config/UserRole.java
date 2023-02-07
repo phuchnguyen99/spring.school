@@ -1,6 +1,5 @@
 package com.spring.data.config;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Arrays;
