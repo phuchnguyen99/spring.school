@@ -25,6 +25,12 @@ public class RegistrationController {
         return "login";
     }
 
+    @GetMapping("/success")
+    public String getSuccess()
+    {
+        return "success";
+    }
+
     @PostMapping("/register")
     public void registerUser(@RequestBody UserDto userDto,
                              final HttpServletRequest request)
