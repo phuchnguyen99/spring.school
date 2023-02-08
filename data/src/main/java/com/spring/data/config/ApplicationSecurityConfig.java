@@ -1,5 +1,8 @@
 package com.spring.data.config;
 
+import com.spring.data.jwt.JwtConfig;
+import com.spring.data.jwt.JwtTokenVerifier;
+import com.spring.data.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -10,25 +13,31 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import java.util.concurrent.TimeUnit;
+
+import javax.crypto.SecretKey;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final UserDetailsService applicationUserService;
 
+    private final JwtConfig jwtConfig;
+   // private final SecretKey secretKey;
+
     @Autowired
     public ApplicationSecurityConfig(final PasswordEncoder passwordEncoder,
-                                     @Qualifier("userDetailsServiceImpl") final UserDetailsService applicationUserService)
+                                     @Qualifier("userDetailsServiceImpl") final UserDetailsService applicationUserService,
+                                     final JwtConfig jwtConfig)
     {
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
+        this.jwtConfig = jwtConfig;
     }
 
 
@@ -37,29 +46,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
     {
         http
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+                .addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*", "/templates")
+                .antMatchers("/", "index", "/css/*", "/js/*")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                        .loginPage("/login").permitAll()
-                        .failureUrl("/error")
-                        .defaultSuccessUrl("/success")
-                        .passwordParameter("password")
-                        .usernameParameter("username")
-                .and()
-                .rememberMe()
-                        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-                        .key("securedkey")
-                .and()
-                .logout()
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .clearAuthentication(true)
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID", "remember-me")
-                        .logoutSuccessUrl("/login");
+                .authenticated();
     }
 
     @Bean
