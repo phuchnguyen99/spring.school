@@ -11,9 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TeacherDto {
+public class CourseResponse {
+    private Long courseId;
+    private String courseName;
+    private String courseCode;
+    private int credit;
+    List<StudentResponse> studentList;
+    private TeacherDto teacherDto;
 
-    private Long id;
-    private String department;
-    List<CourseResponse> courseResponses;
 }

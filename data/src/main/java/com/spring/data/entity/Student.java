@@ -13,13 +13,14 @@ import java.util.List;
 @Builder
 @ToString(exclude = "courseList")
 @Table(name = "student")
-public class Student extends User {
+public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long studentId;
     private String firstName;
     private String lastName;
+    private String email;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

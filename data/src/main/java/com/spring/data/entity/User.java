@@ -26,10 +26,10 @@ public class User implements UserDetails
     private UserRole role;
     @Transient
     private Set<? extends GrantedAuthority> grantedAuthorities;
-     private boolean isAccountNonExpired;
-     private boolean isAccountNonLocked;
-     private boolean isCredentialsNonExpired;
-     private boolean isEnabled;
+     private boolean isAccountNonExpired = true;
+     private boolean isAccountNonLocked = true;
+     private boolean isCredentialsNonExpired = true;
+     private boolean isEnabled = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

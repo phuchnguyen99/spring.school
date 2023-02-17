@@ -17,16 +17,6 @@ public class RegsitrationServiceImpl implements RegistrationService{
 
     @Override
     public User register(UserDto userDto) {
-        if(userDto.getRole().equalsIgnoreCase("student"))
-        {
-            final Student student = new Student();
-            student.setFirstName(userDto.getFirstName());
-            student.setLastName(userDto.getLastName());
-            student.setEmail(userDto.getEmail());
-            student.setPassword(userDto.getPassword());
-            student.setRole(UserRole.STUDENT);
-             studentRepository.save(student);
-        }
         return null;
     }
 }

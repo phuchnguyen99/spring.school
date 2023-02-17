@@ -5,18 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseDto {
-    private Long courseId;
+public class CourseRequest {
     private String courseName;
     private String courseCode;
     private int credit;
-    List<StudentDto> studentList;
     private TeacherDto teacherDto;
-
 }

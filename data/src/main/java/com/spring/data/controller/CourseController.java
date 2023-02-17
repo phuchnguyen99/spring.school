@@ -1,7 +1,8 @@
 package com.spring.data.controller;
 
 import com.spring.data.converter.Converter;
-import com.spring.data.dto.CourseDto;
+import com.spring.data.dto.CourseRequest;
+import com.spring.data.dto.CourseResponse;
 import com.spring.data.entity.Course;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.service.CourseService;
@@ -20,18 +21,18 @@ public class CourseController {
 
     @PostMapping("/addCourse")
     @PreAuthorize("hasAnyAuthority('course:write')")
-    public void addCourse(@RequestBody CourseDto courseDto) throws CourseException
+    public void addCourse(@RequestBody CourseRequest courseRequest) throws CourseException
     {
-        final Course course = converter.convertCourseDtoToCourse(courseDto);
+        final Course course = converter.convertCourseRequestToCourse(courseRequest);
         courseService.addCourse(course);
     }
 
     @GetMapping("/{courseId}")
     @PreAuthorize("hasAnyAuthority('course:write', 'course:read')")
-    public CourseDto getCourse(@PathVariable("courseId") Long courseId) throws CourseException
+    public CourseResponse getCourse(@PathVariable("courseId") Long courseId) throws CourseException
     {
        final Course course = courseService.getCourse(courseId);
-       return converter.convertCourseToCourseDto(course);
+       return converter.convertCourseToCourseResponse(course);
     }
 
     @DeleteMapping("/deleteCourse/{courseId}")
@@ -44,9 +45,9 @@ public class CourseController {
     @PutMapping("/modifyCourse/{courseId}")
     @PreAuthorize("hasAnyAuthority('course:write')")
     public void modifyCourse(@PathVariable("courseId") Long courseId,
-                             @RequestBody CourseDto courseDto) throws CourseException
+                             @RequestBody CourseRequest courseRequest) throws CourseException
     {
-        final Course course = converter.convertCourseDtoToCourse(courseDto);
+        final Course course = converter.convertCourseRequestToCourse(courseRequest);
         courseService.modifyCourse(courseId, course);
     }
 }

@@ -13,23 +13,25 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentDto extends UserDto{
+public class StudentResponse extends UserDto{
+
     private Long studentId;
+
     private String firstName;
     private String lastName;
     private String email;
-    List<CourseDto> courseDtoList = new ArrayList<>();
+    List<CourseResponse> courseResponseList = new ArrayList<>();
 
     public void addCourseToCourseList(final List<Course> courses)
     {
         for(Course course : courses)
         {
-            CourseDto courseDto = new CourseDto();
-            courseDto.setCourseId(course.getCourseId());
-            courseDto.setCourseName(course.getCourseName());
-            courseDto.setCourseCode(course.getCourseCode());
-            courseDto.setCredit(course.getCredit());
-            courseDtoList.add(courseDto);
+            CourseResponse courseResponse = new CourseResponse();
+            courseResponse.setCourseId(course.getCourseId());
+            courseResponse.setCourseName(course.getCourseName());
+            courseResponse.setCourseCode(course.getCourseCode());
+            courseResponse.setCredit(course.getCredit());
+            courseResponseList.add(courseResponse);
         }
     }
 }

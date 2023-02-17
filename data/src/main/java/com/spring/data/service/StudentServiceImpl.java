@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -37,11 +39,11 @@ public class StudentServiceImpl implements StudentService{
     @Override
     @Transactional
     public Student saveStudent(Student student) throws UserException {
-        final Optional<Student> studentOptional = studentRepository.findById(student.getStudentId());
-        if(studentOptional.isPresent())
-        {
+        final Optional<Student> studentOptional = studentRepository.findByEmail(student.getEmail());
+        if (studentOptional.isPresent()) {
             throw new UserException("Student already exists.");
         }
+        student.setStudentId(new Random().nextLong());
         return studentRepository.save(student);
     }
 

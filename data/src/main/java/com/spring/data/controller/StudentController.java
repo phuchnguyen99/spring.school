@@ -1,10 +1,11 @@
 package com.spring.data.controller;
 
 import com.spring.data.converter.Converter;
+import com.spring.data.dto.StudentRequest;
 import com.spring.data.entity.Student;
 import com.spring.data.excepttion.CourseException;
 import com.spring.data.excepttion.UserException;
-import com.spring.data.dto.StudentDto;
+import com.spring.data.dto.StudentResponse;
 import com.spring.data.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ public class StudentController
     private Converter converter;
 
     @GetMapping("/{studentId}")
-    public StudentDto getStudent(@PathVariable("studentId") Long studentId)
+    public StudentResponse getStudent(@PathVariable("studentId") Long studentId)
             throws UserException
     {
         final Student student = studentService.getStudent(studentId);
@@ -33,10 +34,10 @@ public class StudentController
 
     @PostMapping("/addStudent")
     @PreAuthorize("hasRole('ADMIN')")
-    public void addStudent(@RequestBody StudentDto studentDto)
+    public void addStudent(@RequestBody StudentRequest studentDto)
             throws UserException
     {
-        final Student student = converter.convertStudentDtoToStudent(studentDto);
+        final Student student = converter.convertStudentRequestToStudent(studentDto);
         studentService.saveStudent(student);
     }
 
@@ -51,9 +52,9 @@ public class StudentController
     @PutMapping("/updateStudent/{studentId}")
     @PreAuthorize("hasRole('ADMIN')")
     public void updateStudent(@PathVariable("studentId") Long studentId,
-                             @RequestBody StudentDto studentDto) throws UserException
+                             @RequestBody StudentRequest studentDto) throws UserException
     {
-        final Student student = converter.convertStudentDtoToStudent(studentDto);
+        final Student student = converter.convertStudentRequestToStudent(studentDto);
         studentService.updateStudent(studentId, student);
     }
 
@@ -76,7 +77,7 @@ public class StudentController
 
     @GetMapping("/getAllStudents")
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
-    public List<StudentDto> getAllStudents()
+    public List<StudentResponse> getAllStudents()
     {
         final List<Student> students = studentService.getAllStudents();
         return students.stream().map(s -> converter.convertStudentToStudentDto(s)).collect(Collectors.toList());
