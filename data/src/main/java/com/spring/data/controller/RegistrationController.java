@@ -1,6 +1,6 @@
 package com.spring.data.controller;
 
-import com.spring.data.dto.UserDto;
+import com.spring.data.dto.UserRequest;
 import com.spring.data.entity.User;
 import com.spring.data.event.RegistrationCompleteEvent;
 import com.spring.data.service.RegistrationService;
@@ -32,11 +32,11 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public void registerUser(@RequestBody UserDto userDto,
+    public void registerUser(@RequestBody UserRequest userRequest,
                              final HttpServletRequest request)
     {
-        final User user = registrationService.register(userDto);
-        publisher.publishEvent(new RegistrationCompleteEvent(user, applicationUrl(request)));
+        final User user = registrationService.register(userRequest);
+     //   publisher.publishEvent(new RegistrationCompleteEvent(user, applicationUrl(request)));
     }
     private String applicationUrl(final HttpServletRequest request)
     {

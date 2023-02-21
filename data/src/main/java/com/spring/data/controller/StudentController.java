@@ -42,7 +42,7 @@ public class StudentController
     }
 
     @DeleteMapping("/deleteStudent/{studentId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('student:write')")
     public void deleteStudent(@PathVariable("studentId") Long studentId)
             throws UserException
     {
@@ -50,7 +50,7 @@ public class StudentController
     }
 
     @PutMapping("/updateStudent/{studentId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('student:write')")
     public void updateStudent(@PathVariable("studentId") Long studentId,
                              @RequestBody StudentRequest studentDto) throws UserException
     {

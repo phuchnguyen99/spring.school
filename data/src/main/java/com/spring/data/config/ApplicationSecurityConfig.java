@@ -23,12 +23,14 @@ import javax.crypto.SecretKey;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
+    private final static String[] WHITE_LIST = {
+            "/", "index", "/css/*", "/js/*", "/register"
+    };
     private final PasswordEncoder passwordEncoder;
 
     private final UserDetailsService applicationUserService;
 
     private final JwtConfig jwtConfig;
-   // private final SecretKey secretKey;
 
     @Autowired
     public ApplicationSecurityConfig(final PasswordEncoder passwordEncoder,
@@ -51,7 +53,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter  {
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
                 .addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*")
+                .antMatchers(WHITE_LIST)
                 .permitAll()
                 .anyRequest()
                 .authenticated();

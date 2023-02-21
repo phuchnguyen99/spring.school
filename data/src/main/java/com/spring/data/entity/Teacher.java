@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "teacher")
-public class Teacher extends User
+public class Teacher
 {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

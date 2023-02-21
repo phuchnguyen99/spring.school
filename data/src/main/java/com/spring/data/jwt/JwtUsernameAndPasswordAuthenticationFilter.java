@@ -1,6 +1,7 @@
 package com.spring.data.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.data.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,6 +61,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter
     {
         String token = Jwts.builder().setSubject(authentication.getName())
                 .claim("authorities", authentication.getAuthorities())
+                .claim("role", ((User) authentication.getPrincipal()).getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(jwtConfig.getTokenExpirationAfterDays())))
                 .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecreteKey().getBytes()))

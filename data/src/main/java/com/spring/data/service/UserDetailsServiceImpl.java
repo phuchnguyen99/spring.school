@@ -1,5 +1,7 @@
 package com.spring.data.service;
 
+import com.spring.data.config.UserRole;
+import com.spring.data.entity.User;
 import com.spring.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,13 +15,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userDao;
     @Autowired
-    public UserDetailsServiceImpl(@Qualifier("fakeUserRepo") UserRepository userDao) {
+    public UserDetailsServiceImpl(UserRepository userDao) {
         this.userDao = userDao;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       return userDao.selectApplicationUserByUsername(username)
+       User user = userDao.findByUsername(username)
                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+       user.setGrantedAuthorities(user.getRole().getGrantedAuthorities());
+       return user;
     }
 }

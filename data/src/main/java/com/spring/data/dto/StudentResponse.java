@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentResponse extends UserDto{
+public class StudentResponse {
 
     private Long studentId;
 
